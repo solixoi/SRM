@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="" th:href="@{/css/Buttons.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Table.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Sidebar.css}"/>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/sideBar.js}"></script>
+</head>
+<body>
+<div th:insert="blocks/SRMmenu :: srmmenu"></div>
+<div class="text-center p-2">
+        <h1>Изменение пользователей</h1>
+        <form class="container needs-validation p-8 w-25" action="/srm/admin" method="post">
+            <div class="row g-3" style="font-size: 22px">
+                <div class="col-12">
+                    Логин:<br>
+                    <strong th:text="${user.username}"></strong>
+                </div>
+
+                <div class="col-12">
+                    Почта:<br>
+                    <strong th:text="${user.email}"></strong>
+                </div>
+
+                <div class="col-12">
+                    <label for="role" class="form-label">Права доступа</label>
+                    <select class="form-select text-center" id="role" name="role">
+                        <option th:each="el : ${roles}"
+                                th:if="${user.getStrRole() == el.toString()}"
+                                selected="selected" th:text="${el.toString()}"></option>
+                        <option th:each="el : ${roles}"
+                                th:if="${user.getStrRole() != el.toString()}"
+                                th:text="${el.toString()}"></option>
+                    </select>
+                </div>
+
+                <input type="hidden" th:value="${user.id}" name="userId">
+                <input type="hidden" th:value="${_csrf.token}" name="_csrf">
+
+                <hr class="my-4">
+
+                <button class="create" type="submit">Сохранить</button>
+
+                <div th:if="${user.active}" class="col-12">
+                    <a href="" th:href="@{/srm/admin/ban/{id}(id=${user.id})}" style="font-size: 16px; color: firebrick">Заблокировать пользователя</a>
+                </div>
+                <div th:if="not ${user.active}" class="col-12">
+                    <a href="" th:href="@{/srm/admin/unban/{id}(id=${user.id})}" style="font-size: 16px; color: green">Разблокировать пользователя</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div th:insert="blocks/scripts_footer :: scripts_footer"></div>
+</body>
+</html>

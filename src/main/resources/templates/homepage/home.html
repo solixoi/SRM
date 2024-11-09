@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <script src="/js/viagra.js" defer></script>
+    <link rel="stylesheet" href="" th:href="@{/css/HomePage.css}"/>
+</head>
+<body>
+<div class="container">
+    <header th:insert="blocks/homemenu :: homemenu"></header>
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">О проекте</h1>
+                    <p class="lead text-muted">Система закупки крупного предприятия RPPZL.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="album py-5 bg-light">
+            <div class="container">
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div class="col">
+                        <div class="card" style="width: 22rem; height: 8cm">
+                            <img src="https://beseller.by/assets/images/logistika/logistika-06.jpg" class="card-img-top"
+                                 alt="..." width="200" height="230">
+                            <div class="card-body">
+                                <p class="card-text">Ищите выгодные сделки.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 22rem; height: 8cm">
+                            <img src="https://kartinkin.net/uploads/posts/2022-03/thumbs/1647535523_2-kartinkin-net-p-lyudi-za-kompyuterom-kartinki-3.jpg"
+                                 class="card-img-top" alt="..." height="230">
+                            <div class="card-body">
+                                <p class="card-text">Совершайте закупки.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card" style="width: 22rem; height: 8cm">
+                            <img src="https://tradest.ru/upload/pages/article/chto-takoe-logistika.png" class="card-img-top"
+                                 alt="..." height="230">
+                            <div class="card-body">
+                                <p class="card-text">Контролируйте сроки закупок.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+            <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                <svg class="bi" width="30" height="24">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+            <span class="mb-3 mb-md-0 text-muted">© 2024 RPPZL, Inc</span>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

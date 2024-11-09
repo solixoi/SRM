@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <script th:if="${role == '[USER]' or role.isEmpty()}" src="/js/viagra.js" defer></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="" th:href="@{/css/Buttons.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Sidebar.css}"/>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/sideBar.js}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div th:insert="blocks/SRMmenu :: srmmenu"></div>
+<div class="text-center p-2">
+    <h1>Профиль</h1>
+    <div th:if="${param.usedlogin}">
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Введенный логин уже занят',
+                timer: 5000,
+                timerProgressBar: true,
+            }).then(function() {
+                window.location = "srm/profile/";
+            });
+        </script>
+    </div>
+    <div th:if="${param.usedmail}">
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Введенная почта уже занята',
+                timer: 5000,
+                timerProgressBar: true,
+            }).then(function() {
+                window.location = "srm/profile/";
+            });
+        </script>
+    </div>
+    <div th:if="${param.nochanges}">
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Изменений нет',
+                timer: 5000,
+                timerProgressBar: true,
+            }).then(function() {
+                window.location = "srm/profile/";
+            });
+        </script>
+    </div>
+    <form class="container needs-validation p-8 w-25" action="/srm/profile" method="post" onsubmit="confirmDeleteAlert(this); return false">
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="username" class="form-label">Логин</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Логин"
+                       th:value="${user.username}" minlength="6" maxlength="50"
+                       required="">
+            </div>
+
+            <div class="col-12">
+                <label for="email" class="form-label">Эл. почта</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Почта"
+                       th:value="${user.email}" maxlength="50"
+                       required="">
+            </div>
+
+            <div class="col-12">
+                <label for="name" class="form-label">Имя</label>
+                <input type="text" minlength="3" maxlength="20" class="form-control" id="name" name="name"
+                       placeholder="Имя"
+                       th:value="${user.name}"
+                       required="">
+            </div>
+
+            <div class="col-12">
+                <label for="surname" class="form-label">Фамилия</label>
+                <input type="text" minlength="3" maxlength="20" class="form-control" id="surname" name="surname"
+                       placeholder="Фамилия"
+                       th:value="${user.surname}"
+                       required="">
+            </div>
+
+            <div class="col-12">
+                Роль <p th:text="${role}"></p>
+            </div>
+
+            <input type="hidden" th:value="${user.id}" name="userId">
+            <input type="hidden" th:value="${_csrf.token}" name="_csrf">
+
+            <hr class="my-4">
+
+            <button class="create" type="submit">Сохранить</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const confirmDeleteAlert = async function (form) {
+        const sweetConfirm = await Swal.fire({
+            icon: 'question',
+            text: 'Вы уверены что хотите изменить профиль? Потребуется повторный вход в аккаунт!',
+            confirmButtonText: 'Да',
+            showDenyButton: true,
+            denyButtonText: `Нет`,
+        });
+        if (sweetConfirm.isConfirmed) {
+            form.submit();
+        }
+        return sweetConfirm.isConfirmed;
+    }
+</script>
+
+
+<div th:insert="blocks/scripts_footer :: scripts_footer"></div>
+</body>
+</html>

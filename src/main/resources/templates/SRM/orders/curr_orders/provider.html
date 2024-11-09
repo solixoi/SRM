@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <script th:if="${role == '[USER]' or role.isEmpty()}" src="/js/viagra.js" defer></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="" th:href="@{/css/Table.css}"/>
+    <script type="text/javascript" th:src="@{/js/tableSearch.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sortTable.js}"></script>
+    <link rel="stylesheet" href="" th:href="@{/css/Buttons.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Sidebar.css}"/>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/sideBar.js}"></script>
+</head>
+<body>
+<div th:insert="blocks/SRMmenu :: srmmenu"></div>
+    <div class="container text-center p-2 w-50">
+        <h1>Выбор поставщика</h1>
+        <input class="form-control mb-3 w-25" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()">
+        <table class="table" id="info-table">
+            <tbody>
+            <tr>
+                <th onclick="sortTable(0, 's')">Название</th>
+                <th onclick="sortTable(1, 'n')">Цена</th>
+                <th onclick="sortTable(2, 'n')">Количество</th>
+                <th onclick="sortTable(3, 's')">Дата</th>
+            </tr>
+            <tr th:each="el : ${provider}">
+                <td th:text="${el.getName()}"/>
+                <td th:text="${el.getNew_price()}"/>
+                <td th:text="${el.getNew_count()}"/>
+                <td th:text="${el.getNew_date()}"/>
+            </tr>
+            </tbody>
+        </table>
+
+        <form class="container needs-validation p-8 w-50" action="/srm/orders/current_orders" method="post">
+            <div class="col-12">
+                <label for="provider_name" class="form-label"></label>
+                <select class="form-select text-center" id="provider_name" name="provider_name">
+                    <option th:each="el : ${provider}"
+                            th:text="${el.getName()}">
+                    </option>
+                </select>
+            </div>
+
+            <input th:each="el : ${provider}" type="hidden" th:value="${el.getName()}" name="providers_names">
+            <input th:each="el : ${provider}" type="hidden" th:value="${el.getNew_count()}" name="providers_counts">
+            <input th:each="el : ${provider}" type="hidden" th:value="${el.getNew_date()}" name="providers_dates">
+            <input th:each="el : ${provider}" type="hidden" th:value="${el.getNew_price()}" name="providers_prices">
+            <input type="hidden" th:value="${order.id}" name="orderId">
+            <input type="hidden" th:value="${_csrf.token}" name="_csrf">
+
+            <hr class="my-4">
+
+            <button class="create" type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+<div th:insert="blocks/scripts_footer :: scripts_footer"></div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <script th:if="${role == '[USER]' or role.isEmpty()}" src="/js/viagra.js" defer></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="" th:href="@{/css/Table.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Buttons.css}"/>
+    <script type="text/javascript" th:src="@{/js/tableSearch.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sortTable.js}"></script>
+    <link rel="stylesheet" href="" th:href="@{/css/Sidebar.css}"/>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/sideBar.js}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div th:insert="blocks/SRMmenu :: srmmenu"></div>
+<div class="text-center p-2">
+    <h1>Все отменённые заказы</h1>
+    <div class="container">
+        <input class="form-control mb-3 w-25" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()">
+        <table class="table" id="info-table">
+            <tbody>
+            <tr>
+                <th onclick="sortTable(0, 's')">Название</th>
+                <th onclick="sortTable(1, 's')">Автор</th>
+                <th onclick="sortTable(2, 's')">Описание</th>
+                <th nowrap="" onclick="sortTable(3, 'n')">Кол-во</th>
+                <th onclick="sortTable(4, 'n')">Ожидаемая цена</th>
+                <th onclick="sortTable(5, 'n')">Реальная цена</th>
+                <th onclick="sortTable(6, 's')">Ожидаемая дата</th>
+                <th onclick="sortTable(7, 's')">Реальная дата</th>
+                <th onclick="sortTable(8, 's')">Поставщик</th>
+                <th></th>
+            </tr>
+            <tr th:if="${el.status == 'canceled'}" th:each="el : ${pastOrder}">
+                <td th:text="${el.product_name}"/>
+                <td th:text="${el.author}"/>
+                <td th:text="${el.description}"/>
+                <td th:text="${el.count}"/>
+                <td th:text="${el.max_price}"/>
+                <td th:text="${el.real_price}"/>
+                <td th:text="${el.expected_date}"/>
+                <td th:text="${el.real_date}"/>
+                <td th:width="100px" th:if="not ${el.getProvider()}" th:text="-----"/>
+                <td nowrap="" th:width="100px" th:if="${el.getProvider()}" th:text="${el.getProvider()}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div th:insert="blocks/scripts_footer :: scripts_footer"></div>
+</body>
+</html>

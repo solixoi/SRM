@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Вход</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="" th:href="@{/css/HomePage.css}"/>
+    <link rel="stylesheet" href="" th:href="@{/css/Login.css}"/>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/login.js}"></script>
+</head>
+<body>
+<header th:insert="blocks/homemenu :: homemenu"></header>
+<div class="form">
+    <div class="form-panel one">
+        <div class="form-header">
+            <h1>Вход</h1>
+        </div>
+        <div th:if="${param.error}" class="form-group">
+            Неверный логин или пароль.
+        </div>
+        <div th:if="${param.logout}" class="form-group">
+            Вы вышли из аккаунта.
+        </div>
+        <div class="form-content">
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Логин</label>
+                    <input id="username" type="text" name="username" minlength="6" maxlength="50" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input id="password" type="password" name="password" minlength="8" maxlength="30" required="required"/>
+                </div>
+                <div class="form-group">
+                    <a href="./registration" class="nav-link px-2 link-secondary">Зарегистрироваться</a>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Войти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

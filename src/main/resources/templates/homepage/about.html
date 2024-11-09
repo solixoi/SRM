@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/js/viagra.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="" th:href="@{/css/HomePage.css}" />
+</head>
+<body>
+<div class="container">
+    <header th:insert="blocks/homemenu :: homemenu"></header>
+
+    <main class="container">
+        <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+            <div class="col-md-10 px-0">
+                <h1 class="display-4 fst-italic">О компании</h1>
+                <p class="lead my-3">«RPPZL» – лидер в области разработки и внедрения ИТ-решений для цифровизации и автоматизации закупочной деятельности. Компания обладает многоуровневой экспертизой в области разработки, внедрения, сопровождения и развития аналитических и расчётных систем, мобильных решений, системной интеграции и других направлений, обеспечивающих комплексную автоматизацию деятельности различных компаний</p>
+            </div>
+        </div>
+        <div class="row row-cols-1 mb-4 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card" style="height: 300px">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">«RPPZL»&nbsp;является членом саморегулируемых организаций (СРО) и имеет право выполнения следующих работ</h5>
+                        <ul>
+                            <li>строительство, реконструкция, капитальный ремонт, снос объектов капитального строительства, в том числе с использованием конкурентных способов заключения договоров </li>
+                            <li>подготовка проектной документации, в том числе с использованием конкурентных способов заключения договоров.&nbsp;</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="height: 300px">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Собственные Центры компетенций</h5>
+                        <ul>
+                            <li>C++</li>
+                            <li>Java</li>
+                            <li>Spring Boot</li>
+                            <li>SAP</li>
+                            <li>AMIR</li>
+                            <li>Kaspersky OS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card p-4">
+            <h3 class="card-title text-center">Лидер в области импортозамещения российской закупочной деятельности:</h3>
+            <ul> </ul>
+            <ul class="text-left">
+                <li>0&nbsp;решений компании «RPPZL» включены в Реестр российского ПО&nbsp;</li>
+                <li>За 2&nbsp;месяца работы в ИТ-отрасли&nbsp;создано 1 отраслевое решение «AMIR» для автоматизации ключевых бизнес-процессов.&nbsp;</li>
+                <li>Будущий партнер крупнейших российских и зарубежных вендоров ИТ-оборудования и программного обеспечения, будет включена в Программы партнёрства ПАО «Россети» и Группы «Интер РАО».&nbsp;</li>
+                <li>Система менеджмента качества подтверждена сертификатом соответствия ГОСТ Р ИСО БГУИР.</li>
+            </ul>
+        </div>
+    </main>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+            <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                <svg class="bi" width="30" height="24">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+            <span class="mb-3 mb-md-0 text-muted">© 2024 RPPZL, Inc</span>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
