@@ -1,5 +1,7 @@
 package com.AMIR.SRM.domain;
 
+import com.AMIR.SRM.service.ProviderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -18,12 +20,17 @@ public class Order {
     private double max_price;
     private int count;
     private Date expected_date;
-    private double real_price;
-    private Date real_date;
     private String author;
     private boolean is_approved;
 
-    private String provider;
+    private Integer provider;
+
+    @Transient
+    private boolean respond;
+    @Transient
+    private String providerName;
+
+
     public Order(){
 
     }
@@ -102,21 +109,6 @@ public class Order {
         this.expected_date = expected_date;
     }
 
-    public double getReal_price() {
-        return real_price;
-    }
-
-    public void setReal_price(double real_price) {
-        this.real_price = real_price;
-    }
-
-    public Date getReal_date() {
-        return real_date;
-    }
-
-    public void setReal_date(Date real_date) {
-        this.real_date = real_date;
-    }
 
     public String getAuthor() {
         return author;
@@ -134,11 +126,27 @@ public class Order {
         this.is_approved = is_approved;
     }
 
-    public String getProvider() {
+    public Integer getProvider() {
         return provider;
     }
 
-    public void setProvider(String provider) {
+    public void setProvider(Integer provider) {
         this.provider = provider;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public void setRespond(boolean respond) {
+        this.respond = respond;
+    }
+
+    public boolean isRespond() {
+        return respond;
     }
 }

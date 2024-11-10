@@ -22,7 +22,7 @@
 <body>
 <div th:insert="blocks/SRMmenu :: srmmenu"></div>
 <div class="text-center p-2">
-    <h1>Все завершённые заказы</h1>
+    <h1>Все ваши завершённые заказы</h1>
 
     <div class="container">
         <div class="row mb-3">
@@ -31,7 +31,7 @@
                        type="text">
             </div>
             <div class="col-2 my-auto mx-auto">
-                <form th:action="@{/srm/admin/completed_orders/analytics}">
+                <form th:action="@{/srm/supplier/completed_orders/analytics}">
                     <button class="analytics" style="font-size: 17px">
                         Аналитика
                     </button>
@@ -49,7 +49,6 @@
                         <th nowrap="" onclick="sortTable(3, 'n')">Кол-во</th>
                         <th onclick="sortTable(4, 'n')">Цена</th>
                         <th onclick="sortTable(5, 's')">Ожидаемая дата</th>
-                        <th onclick="sortTable(6, 's')">Поставщик</th>
                         <th>Скачать</th>
                     </tr>
                     <tr th:each="el : ${pastOrder}" th:if="${el.status == 'completed'}">
@@ -59,8 +58,6 @@
                         <td th:text="${el.count}"/>
                         <td th:text="${el.max_price}"/>
                         <td th:text="${el.expected_date}"/>
-                        <td th:if="not ${el.getProviderName()}" th:text="-----" th:width="100px"/>
-                        <td nowrap="" th:if="${el.getProviderName()}" th:text="${el.getProviderName()}" th:width="100px"/>
                         <td th:width="50px" class="border-0">
                             <form th:action="@{/pdf/generate_past/{id}(id=${el.id})}">
                                 <button th:if="${el.getProvider()}" class="button-30">Договор</button>

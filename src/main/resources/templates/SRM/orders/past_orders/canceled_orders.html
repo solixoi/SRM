@@ -30,11 +30,9 @@
                 <th onclick="sortTable(0, 's')">Название</th>
                 <th onclick="sortTable(1, 's')">Описание</th>
                 <th nowrap="" onclick="sortTable(2, 'n')">Кол-во</th>
-                <th onclick="sortTable(3, 'n')">Ожидаемая цена</th>
-                <th onclick="sortTable(4, 'n')">Реальная цена</th>
-                <th onclick="sortTable(5, 's')">Ожидаемая дата</th>
-                <th onclick="sortTable(6, 's')">Реальная дата</th>
-                <th onclick="sortTable(7, 's')">Поставщик</th>
+                <th onclick="sortTable(3, 'n')">Цена</th>
+                <th onclick="sortTable(4, 's')">Ожидаемая дата</th>
+                <th onclick="sortTable(5, 's')">Поставщик</th>
                 <th>Действие</th>
             </tr>
             <tr th:if="${el.status == 'canceled'}" th:each="el : ${pastOrder}">
@@ -42,11 +40,9 @@
                 <td th:text="${el.description}"/>
                 <td th:text="${el.count}"/>
                 <td th:text="${el.max_price}"/>
-                <td th:text="${el.real_price}"/>
                 <td th:text="${el.expected_date}"/>
-                <td th:text="${el.real_date}"/>
                 <td th:width="100px" th:if="not ${el.getProvider()}" th:text="-----"/>
-                <td nowrap="" th:width="100px" th:if="${el.getProvider()}" th:text="${el.getProvider()}"/>
+                <td nowrap="" th:width="100px" th:if="${el.getProvider()}" th:text="${el.getProviderName()}"/>
                 <td th:width="100px">
                     <form onsubmit="confirmRepeatAlert(this); return false"
                           th:action="@{/srm/orders/canceled_orders/repeating/{id}(id=${el.id})}">

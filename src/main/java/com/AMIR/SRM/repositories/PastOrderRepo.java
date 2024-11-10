@@ -8,4 +8,5 @@ import java.util.List;
 public interface PastOrderRepo extends JpaRepository<PastOrder, Long> {
     List<PastOrder> findByAuthor(String author);
     PastOrder findById(long id);
+    List<PastOrder> findByProvider(Integer id);
 }

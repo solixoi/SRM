@@ -39,3 +39,9 @@
 .table tbody tr:nth-child(even){
     background: #f8f8f8!important;
 }
+
+.label-supp{
+    font-size: 17px !important;
+    margin-bottom: 0 !important;
+    font-weight: 700 !important;
+}

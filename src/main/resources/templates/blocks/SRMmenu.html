@@ -12,7 +12,6 @@
             <li class="border-top w-75" style="padding-bottom: 0px"></li>
             <li th:if="${role != '[SUPPLIER]'}" style="color: black; font-size: 18px"><a href="/srm/orders/current_orders">Заказы </a> </li>
             <li th:if="${role != '[SUPPLIER]'}"><a href="/srm/orders/new_order">Новый запрос </a></li>
-            <li th:if="${role != '[SUPPLIER]'}"><a href="/srm/orders/current_orders">В процессе</a></li>
             <li th:if="${role != '[SUPPLIER]'}"><a href="/srm/orders/completed_orders">Завершенные</a></li>
             <li th:if="${role != '[SUPPLIER]'}"><a href="/srm/orders/canceled_orders">Отменённые</a></li>
             <li th:if="${role =='[USER]'}"><a href="/srm/orders/wait_approved"> Ожидание соглосования </a></li>
@@ -24,6 +23,7 @@
             <li th:if="${role != '[USER]' && role != '[SUPPLIER]'}"><a href="/srm/admin/completed_orders"> <strong> Статистика завершенных заказов </strong> </a> </li>
             <li th:if="${role != '[USER]' && role != '[SUPPLIER]'}"><a href="/srm/admin/canceled_orders"> <strong> Статистика отмененных заказов </strong>  </a> </li>
             <li th:if="${role == '[SUPPLIER]'}"><a href="/srm/supplier/current_orders">Заказы</a></li>
+            <li th:if="${role == '[SUPPLIER]'}"> <a href="/srm/supplier/completed_orders"> Завершенные заказы </a></li>
             <li th:if="${role != '[USER]' && role != '[SUPPLIER]'}">
                 <a href="/srm/admin/youtube" class="text">
                     <strong>Фоточки</strong>

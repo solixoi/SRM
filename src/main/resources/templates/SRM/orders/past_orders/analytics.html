@@ -25,16 +25,12 @@
             <th>Общая сумма, BYN</th>
             <th>Куплено товаров</th>
             <th>Средняя цена, BYN</th>
-            <th>Средняя скидка, %</th>
-            <th>Дней сэкономлено</th>
             <th>Процент отмененённых</th>
         </tr>
         <tr id="row" style="text-align: center; max-width: 100px">
             <td th:text="${sum}"/>
             <td th:text="${count}"/>
             <td th:text="${avgPrice}"/>
-            <td th:text="${avgDiscount}"/>
-            <td th:text="${diffDays}"/>
             <td th:text="${percentOfCanceled}"/>
         </tr>
         </tbody>

@@ -4,6 +4,7 @@ import com.AMIR.SRM.domain.Order;
 import com.AMIR.SRM.domain.PastOrder;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,9 @@ import java.net.URL;
 
 @Service
 public class PdfGeneratorService {
+    @Autowired
+    private ProviderService providerService;
+
     public void export(HttpServletResponse response, Order order) throws IOException, DocumentException {
         Document document = new Document(PageSize.A4);
         PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
@@ -39,13 +43,13 @@ public class PdfGeneratorService {
 
         Paragraph[] paragraphs = new Paragraph[8];
         paragraphs[0] = new Paragraph("Номер заказа: " + order.getId(), fontParagraph);
-        paragraphs[1] = new Paragraph("Исполнитель: " + order.getProvider(), fontParagraph);
+        paragraphs[1] = new Paragraph("Исполнитель: " + providerService.fetchProviderNameByProviderId(Long.valueOf(order.getProvider())), fontParagraph);
         paragraphs[2] = new Paragraph("Наименование товара: " + order.getProduct_name(), fontParagraph);
         paragraphs[3] = new Paragraph("Краткое описание: " + order.getDescription(), fontParagraph);
-        paragraphs[4] = new Paragraph("Дата доставки: " + order.getReal_date(), fontParagraph);
-        paragraphs[5] = new Paragraph("Цена одной единицы товара: " + String.format("%.2f", order.getReal_price()) + " BYN", fontParagraph);
+        paragraphs[4] = new Paragraph("Дата доставки: " + order.getExpected_date(), fontParagraph);
+        paragraphs[5] = new Paragraph("Цена одной единицы товара: " + String.format("%.2f", order.getMax_price()) + " BYN", fontParagraph);
         paragraphs[6] = new Paragraph("Количество: " + order.getCount(), fontParagraph);
-        paragraphs[7] = new Paragraph("Итого к оплате: " + String.format("%.2f", order.getReal_price() * order.getCount()) + " BYN", fontParagraph);
+        paragraphs[7] = new Paragraph("Итого к оплате: " + String.format("%.2f", order.getMax_price() * order.getCount()) + " BYN", fontParagraph);
 
         for (Paragraph paragraph : paragraphs) {
             paragraph.setAlignment(Paragraph.ALIGN_LEFT);
@@ -82,13 +86,13 @@ public class PdfGeneratorService {
 
         Paragraph[] paragraphs = new Paragraph[8];
         paragraphs[0] = new Paragraph("Номер заказа: " + pastOrder.getId(), fontParagraph);
-        paragraphs[1] = new Paragraph("Исполнитель: " + pastOrder.getProvider(), fontParagraph);
+        paragraphs[1] = new Paragraph("Исполнитель: " + providerService.fetchProviderNameByProviderId(Long.valueOf(pastOrder.getProvider())), fontParagraph);
         paragraphs[2] = new Paragraph("Наименование товара: " + pastOrder.getProduct_name(), fontParagraph);
         paragraphs[3] = new Paragraph("Краткое описание: " + pastOrder.getDescription(), fontParagraph);
-        paragraphs[4] = new Paragraph("Дата доставки: " + pastOrder.getReal_date(), fontParagraph);
-        paragraphs[5] = new Paragraph("Цена одной единицы товара: " + String.format("%.2f", pastOrder.getReal_price()) + " BYN", fontParagraph);
+        paragraphs[4] = new Paragraph("Дата доставки: " + pastOrder.getMax_price(), fontParagraph);
+        paragraphs[5] = new Paragraph("Цена одной единицы товара: " + String.format("%.2f", pastOrder.getMax_price()) + " BYN", fontParagraph);
         paragraphs[6] = new Paragraph("Количество: " + pastOrder.getCount(), fontParagraph);
-        paragraphs[7] = new Paragraph("Итого к оплате: " + String.format("%.2f", pastOrder.getReal_price() * pastOrder.getCount()) + " BYN", fontParagraph);
+        paragraphs[7] = new Paragraph("Итого к оплате: " + String.format("%.2f", pastOrder.getMax_price() * pastOrder.getCount()) + " BYN", fontParagraph);
 
         for (Paragraph paragraph : paragraphs) {
             paragraph.setAlignment(Paragraph.ALIGN_LEFT);

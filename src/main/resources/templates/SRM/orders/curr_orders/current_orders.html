@@ -23,7 +23,7 @@
 <div class="text-center p-2">
 
     <div class="container">
-        <h1>Текущие заказы</h1>
+        <h1>Все заказы</h1>
         <input class="form-control mb-3 w-25" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()">
         <table class="table" id="info-table">
             <tbody>
@@ -31,11 +31,9 @@
                 <th onclick="sortTable(0, 's')">Название</th>
                 <th onclick="sortTable(1, 's')">Описание</th>
                 <th nowrap="" onclick="sortTable(2, 'n')">Кол-во</th>
-                <th onclick="sortTable(3, 'n')">Ожидаемая цена</th>
-                <th onclick="sortTable(4, 'n')">Реальная цена</th>
-                <th onclick="sortTable(5, 's')">Ожидаемая дата</th>
-                <th onclick="sortTable(6, 's')">Реальная дата</th>
-                <th onclick="sortTable(7, 's')">Поставщик</th>
+                <th onclick="sortTable(3, 'n')">Цена</th>
+                <th onclick="sortTable(4, 's')">Ожидаемая дата</th>
+                <th onclick="sortTable(5, 's')">Поставщик</th>
                 <th>Завершить/отменить</th>
                 <th>Скачать</th>
 
@@ -46,24 +44,20 @@
                 <td th:text="${el.count}"/>
 
                 <td th:text="${el.max_price}"/>
-                <td th:if="${el.real_price}" th:text="${el.real_price}"/>
-                <td th:if="not ${el.real_price}" th:text="0"/>
 
                 <td id="expected_date" class="color_date" th:text="${el.expected_date}"/>
-                <td th:if="${el.real_date}" th:text="${el.real_date}"/>
-                <td th:if="not ${el.real_date}" th:text="-----"/>
 
                 <td th:width="100px" th:if="not ${el.getProvider()}">
                     <form th:action="@{/srm/orders/current_orders/{id}(id=${el.id})}">
                         <button class="button-30" type="submit">Выбрать</button>
                     </form>
                 </td>
-                <td nowrap="" th:width="100px" th:if="${el.getProvider()}" th:text="${el.getProvider()}"></td>
+                <td nowrap="" th:width="100px" th:if="${el.getProvider()}" th:text="${el.getProviderName()}"></td>
 
                 <td th:width="100px">
                     <form onsubmit="confirmFinishAlert(this); return false"
                           th:action="@{/srm/orders/current_orders/finishing/{id}(id=${el.id})}">
-                        <button th:if="${el.getReal_date()}" class="button-30">
+                        <button th:if="${el.getProvider()}" class="button-30">
                             Завершить
                         </button>
                     </form>

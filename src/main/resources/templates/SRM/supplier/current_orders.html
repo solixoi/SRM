@@ -23,7 +23,7 @@
 <div class="text-center p-2">
 
     <div class="container">
-        <h1>Текущие заказы</h1>
+        <h1>Заказы от пользователей</h1>
         <input class="form-control mb-3 w-25" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()">
         <table class="table" id="info-table">
             <tbody>
@@ -36,7 +36,7 @@
                 <th onclick="sortTable(6, 's')">Ожидаемая дата</th>
                 <th>Откликнуться</th>
             </tr>
-            <tr th:if="${el.is_approved}" th:each="el : ${order}" id="row">
+            <tr th:if="${el.is_approved && el.getProvider() == null}" th:each="el : ${order}" id="row">
                 <td th:text="${el.product_name}"/>
                 <td th:text="${el.author}"/>
                 <td th:text="${el.description}"/>
@@ -47,9 +47,17 @@
                 <td id="expected_date" class="color_date" th:text="${el.expected_date}"/>
 
 
-                <td th:width="100px">
-                    <form onsubmit="confirmCancelAlert(this); return false"
-                          th:action="@{/srm/orders/current_orders/cancelling/{id}(id=${el.id})}">
+                <td th:width="100px" >
+
+                    <form th:action="@{/srm/supplier/current_orders/cancel/{id}(id=${el.id})}"
+                          th:if="${el.isRespond()}">
+                        <button class="button-30">
+                            Отозвать
+                        </button>
+                    </form>
+
+                    <form th:action="@{/srm/supplier/current_orders/respond/{id}(id=${el.id})}"
+                          th:if="${!el.isRespond()}">
                         <button class="button-30">
                             Откликнуться
                         </button>
@@ -61,34 +69,6 @@
     </div>
 </div>
 
-<script>
-    const confirmCancelAlert = async function (form) {
-        const sweetConfirm = await Swal.fire({
-            icon: 'question',
-            text: 'Вы уверены что хотите отменить заказ?',
-            confirmButtonText: 'Да',
-            showDenyButton: true,
-            denyButtonText: `Нет`,
-        });
-        if (sweetConfirm.isConfirmed) {
-            form.submit();
-        }
-        return sweetConfirm.isConfirmed;
-    }
-    const confirmFinishAlert = async function (form) {
-        const sweetConfirm = await Swal.fire({
-            icon: 'question',
-            text: 'Вы уверены что хотите завершить заказ?',
-            confirmButtonText: 'Да',
-            showDenyButton: true,
-            denyButtonText: `Нет`,
-        });
-        if (sweetConfirm.isConfirmed) {
-            form.submit();
-        }
-        return sweetConfirm.isConfirmed;
-    }
-</script>
 
 <div th:insert="blocks/scripts_footer :: scripts_footer"></div>
 </body>

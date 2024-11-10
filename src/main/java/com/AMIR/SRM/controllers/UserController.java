@@ -3,6 +3,8 @@ package com.AMIR.SRM.controllers;
 import com.AMIR.SRM.domain.*;
 import com.AMIR.SRM.repositories.PastOrderRepo;
 import com.AMIR.SRM.repositories.UserRepo;
+import com.AMIR.SRM.service.OrderService;
+import com.AMIR.SRM.service.PastOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,10 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("srm/admin")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private PastOrderService pastOrderService;
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
@@ -109,7 +115,7 @@ public class UserController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<Order> order = orderRepo.findAll();
+        List<Order> order = orderService.getAllOrdersWithProviderName();
 
         Date currentDate = new Date(System.currentTimeMillis() - 86400000);
         for (int i = 0; i < order.size(); i++)
@@ -139,7 +145,7 @@ public class UserController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findAll();
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderName();
 
         model.addAttribute("pastOrder", pastOrder);
         return "SRM/admin/all_past_order_stats";
@@ -154,45 +160,42 @@ public class UserController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findAll();
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByAuthor(authentication.getName());
         int countOfPastOrders = pastOrder.size();
-        for (int i = 0; i < pastOrder.size(); i++)
+
+        for (int i = 0; i < pastOrder.size(); i++) {
             if (Objects.equals(pastOrder.get(i).getStatus(), "canceled")) {
                 pastOrder.remove(i);
                 i--;
             }
+        }
 
         int count = 0;
         float sum = 0;
-        float realSum = 0;
-        long diffInMillies = 0;
-        int diffDays = 0;
+
         PastOrder pastOrderI;
         for (int i = 0; i < pastOrder.size(); i++) {
             pastOrderI = pastOrder.get(i);
             count += pastOrderI.getCount();
-            sum += pastOrderI.getCount()*pastOrderI.getMax_price();
-            realSum += pastOrderI.getCount()*pastOrderI.getReal_price();
-            diffInMillies += Math.abs(pastOrderI.getExpected_date().getTime() - pastOrderI.getReal_date().getTime());
+            sum += pastOrderI.getCount() * pastOrderI.getMax_price();
         }
-        float avgPrice = (float) (Math.ceil(realSum*100/count)/100);
-        float avgDiscount = (float) Math.ceil((sum - realSum)/sum*10000)/100;
+
+        float avgPrice = (float) (Math.ceil(sum * 100 / count) / 100);
 
         float percentOfCanceled;
-        diffDays = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         try {
             percentOfCanceled = (float) Math.ceil((countOfPastOrders - pastOrder.size()) * 10000 / countOfPastOrders) / 100;
         } catch (ArithmeticException e) {
             percentOfCanceled = 0;
         }
-        if(percentOfCanceled != 0) {
+
+        if (percentOfCanceled != 0) {
             model.addAttribute("sum", df.format(sum));
             model.addAttribute("count", count);
             model.addAttribute("avgPrice", avgPrice);
-            model.addAttribute("avgDiscount", avgDiscount);
-            model.addAttribute("diffDays", diffDays);
             model.addAttribute("percentOfCanceled", percentOfCanceled);
         }
+
         return "SRM/orders/past_orders/analytics";
     }
 
@@ -203,7 +206,7 @@ public class UserController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findAll();
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderName();
 
         model.addAttribute("pastOrder", pastOrder);
         return "SRM/admin/all_canceled_order_stats";

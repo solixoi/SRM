@@ -30,11 +30,9 @@
                 <th onclick="sortTable(1, 's')">Автор</th>
                 <th onclick="sortTable(2, 's')">Описание</th>
                 <th onclick="sortTable(3, 'n')">Кол-во</th>
-                <th onclick="sortTable(4, 'n')">Ожидаемая цена</th>
-                <th onclick="sortTable(5, 'n')">Реальная цена</th>
-                <th onclick="sortTable(6, 's')">Ожидаемая дата</th>
-                <th onclick="sortTable(7, 's')">Реальная дата</th>
-                <th onclick="sortTable(8, 's')">Поставщик</th>
+                <th onclick="sortTable(4, 'n')">Цена</th>
+                <th onclick="sortTable(5, 's')">Ожидаемая дата</th>
+                <th onclick="sortTable(6, 's')">Поставщик</th>
                 <th>Отменить</th>
                 <th>Скачать</th>
             </tr>
@@ -46,10 +44,8 @@
                 <td th:text="${el.description}"/>
                 <td th:text="${el.count}"/>
                 <td th:text="${el.max_price}"/>
-                <td th:text="${el.real_price ?: '0'}"/>
                 <td th:text="${el.expected_date}"/>
-                <td th:text="${el.real_date ?: '-----'}"/>
-                <td th:text="${el.provider ?: 'Не назначен'}"/>
+                <td th:text="${el.getProviderName() ?: 'Не назначен'}"/>
                 <td>
                     <form onsubmit="confirmCancelAlert(this); return false"
                           th:action="@{/srm/admin/current_orders/cancelling/{id}(id=${el.id})}">

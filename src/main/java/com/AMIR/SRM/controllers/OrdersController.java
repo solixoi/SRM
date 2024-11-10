@@ -2,8 +2,12 @@ package com.AMIR.SRM.controllers;
 
 import com.AMIR.SRM.domain.Order;
 import com.AMIR.SRM.domain.PastOrder;
+import com.AMIR.SRM.domain.Response;
 import com.AMIR.SRM.repositories.OrderRepo;
 import com.AMIR.SRM.repositories.PastOrderRepo;
+import com.AMIR.SRM.repositories.ResponseRepo;
+import com.AMIR.SRM.service.OrderService;
+import com.AMIR.SRM.service.PastOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,21 +16,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.AMIR.SRM.domain.Provider;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("srm/orders/")
 public class OrdersController {
-
+    @Autowired
+    private ResponseRepo responseRepo;
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
     private PastOrderRepo pastOrderRepo;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private PastOrderService pastOrderService;
 
     @GetMapping("new_order")
     public String new_order(Model model) {
@@ -61,7 +68,7 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<Order> order = orderRepo.findByAuthor(authentication.getName());
+        List<Order> order = orderService.getAllOrdersWithProviderNameByAuthor(authentication.getName());
 
         Date currentDate = new Date(System.currentTimeMillis() - 86400000);
         for (int i = 0; i < order.size(); i++)
@@ -77,64 +84,34 @@ public class OrdersController {
         return "SRM/orders/curr_orders/current_orders";
     }
 
+
     @GetMapping("current_orders/{order}")
     public String orderProvider(@PathVariable Order order, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        List<Response> responses = responseRepo.findByOrder(order);
         model.addAttribute("title", "Выбор поставщика");
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
-        model.addAttribute("order", order);
-
-        Random random = new Random();
-        int countOfProviders = random.nextInt(11) + 5;
-        Provider[] providers = new Provider[countOfProviders];
-        for (int i = 0; i < countOfProviders; i++) {
-            int j = random.nextInt(10);
-            providers[i] = new Provider();  //создание
-            providers[i].setName("Поставщик " + (i + 1)); //nomer
-            providers[i].setNew_price(Math.ceil((random.nextDouble(10.0) + 91) * order.getMax_price()) / 100);
-            providers[i].setNew_date(order.getExpected_date());
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(order.getExpected_date());
-            Date currentDate = new Date(System.currentTimeMillis());
-            long diffDate = (order.getExpected_date().getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
-            cal.add(Calendar.DATE, -random.nextInt((int) diffDate));
-            providers[i].setNew_date(new java.sql.Date(cal.getTimeInMillis()));
-
-            if (j < 5) {
-                providers[i].setNew_count(order.getCount()); //01234
-            } else if (j > 7) {
-                providers[i].setNew_count(order.getCount() * (100 - random.nextInt(49) + 1) / 100);  //89
-            } else {
-                providers[i].setNew_count(order.getCount() * (100 - random.nextInt(49) + 51) / 1000); //567
-            }
-            if (providers[i].getNew_count() == 0) providers[i].setNew_count(1);
-        }
-        model.addAttribute("provider", providers);
+        model.addAttribute("responses", responses);
+        model.addAttribute("currentOrder", order);
 
         return "SRM/orders/curr_orders/provider";
     }
 
     @PostMapping("/current_orders")
     public String providerSave(
-            @RequestParam String provider_name,
-            @RequestParam String[] providers_names,
-            @RequestParam Date[] providers_dates,
-            @RequestParam int[] providers_counts,
-            @RequestParam double[] providers_prices,
-            @RequestParam("orderId") Order order
+            @RequestParam("provider_name") Long providerId,
+            @RequestParam("responseOrderId") Long responseOrderId
     ) {
-        order.setProvider(provider_name);
-        for (int i = 0; i < providers_names.length; i++) {
-            if (Objects.equals(providers_names[i], provider_name)) {
-                order.setReal_price(providers_prices[i]);
-                order.setReal_date(providers_dates[i]);
-                order.setCount(providers_counts[i]);
-                break;
-            }
+        Optional<Order> orderOptional = orderRepo.findById(responseOrderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setProvider(providerId.intValue());
+            orderRepo.save(order);
+        } else {
+            System.out.println("Заказ с ID " + responseOrderId + " не найден.");
         }
-        orderRepo.save(order);
         return "redirect:/srm/orders/current_orders";
     }
 
@@ -177,7 +154,7 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<Order> order = orderRepo.findAll();
+        List<Order> order = orderService.getAllOrdersWithProviderName();
         Date currentDate = new Date(System.currentTimeMillis() - 86400000);
         for (int i = 0; i < order.size(); i++)
         {
@@ -201,7 +178,7 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<Order> order = orderRepo.findByAuthor(authentication.getName());
+        List<Order> order = orderService.getAllOrdersWithProviderNameByAuthor(authentication.getName());
         Date currentDate = new Date(System.currentTimeMillis() - 86400000);
         for (int i = 0; i < order.size(); i++)
         {
@@ -243,7 +220,6 @@ public class OrdersController {
         order.setMax_price(max_price);
         order.setExpected_date(expected_date);
         order.setIs_approved(true);
-        Provider provider = new Provider();
 
         orderRepo.save(order);
         return "redirect:/srm/orders/future_orders";
@@ -256,7 +232,7 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findByAuthor(authentication.getName());
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByAuthor(authentication.getName());
 
         model.addAttribute("pastOrder", pastOrder);
         return "SRM/orders/past_orders/completed_orders";
@@ -297,7 +273,7 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findByAuthor(authentication.getName());
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByAuthor(authentication.getName());
 
         model.addAttribute("pastOrder", pastOrder);
         return "SRM/orders/past_orders/canceled_orders";
@@ -327,45 +303,42 @@ public class OrdersController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
 
-        List<PastOrder> pastOrder = pastOrderRepo.findByAuthor(authentication.getName());
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByAuthor(authentication.getName());
         int countOfPastOrders = pastOrder.size();
-        for (int i = 0; i < pastOrder.size(); i++)
+
+        for (int i = 0; i < pastOrder.size(); i++) {
             if (Objects.equals(pastOrder.get(i).getStatus(), "canceled")) {
                 pastOrder.remove(i);
                 i--;
             }
+        }
 
         int count = 0;
         float sum = 0;
-        float realSum = 0;
-        long diffInMillies = 0;
-        int diffDays = 0;
+
         PastOrder pastOrderI;
         for (int i = 0; i < pastOrder.size(); i++) {
-                pastOrderI = pastOrder.get(i);
-                count += pastOrderI.getCount();
-                sum += pastOrderI.getCount()*pastOrderI.getMax_price();
-                realSum += pastOrderI.getCount()*pastOrderI.getReal_price();
-                diffInMillies += Math.abs(pastOrderI.getExpected_date().getTime() - pastOrderI.getReal_date().getTime());
+            pastOrderI = pastOrder.get(i);
+            count += pastOrderI.getCount();
+            sum += pastOrderI.getCount() * pastOrderI.getMax_price();
         }
-        float avgPrice = (float) (Math.ceil(realSum*100/count)/100);
-        float avgDiscount = (float) Math.ceil((sum - realSum)/sum*10000)/100;
+
+        float avgPrice = (float) (Math.ceil(sum * 100 / count) / 100);
 
         float percentOfCanceled;
-        diffDays = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         try {
             percentOfCanceled = (float) Math.ceil((countOfPastOrders - pastOrder.size()) * 10000 / countOfPastOrders) / 100;
         } catch (ArithmeticException e) {
             percentOfCanceled = 0;
         }
-        if(percentOfCanceled != 0) {
+
+        if (percentOfCanceled != 0) {
             model.addAttribute("sum", df.format(sum));
             model.addAttribute("count", count);
             model.addAttribute("avgPrice", avgPrice);
-            model.addAttribute("avgDiscount", avgDiscount);
-            model.addAttribute("diffDays", diffDays);
             model.addAttribute("percentOfCanceled", percentOfCanceled);
         }
+
         return "SRM/orders/past_orders/analytics";
     }
 }
