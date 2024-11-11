@@ -122,7 +122,7 @@ public class ProviderController {
         model.addAttribute("username", authentication.getName());
         model.addAttribute("role", authentication.getAuthorities().toString());
         User user = userRepo.findByUsername(authentication.getName());
-        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByProviderId((int)user.getId());
+        List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByProviderId((int) user.getId());
         int countOfPastOrders = pastOrder.size();
 
         for (int i = 0; i < pastOrder.size(); i++) {
@@ -151,12 +151,10 @@ public class ProviderController {
             percentOfCanceled = 0;
         }
 
-        if (percentOfCanceled != 0) {
-            model.addAttribute("sum", df.format(sum));
-            model.addAttribute("count", count);
-            model.addAttribute("avgPrice", avgPrice);
-            model.addAttribute("percentOfCanceled", percentOfCanceled);
-        }
+        model.addAttribute("sum", df.format(sum));
+        model.addAttribute("count", count);
+        model.addAttribute("avgPrice", avgPrice);
+        model.addAttribute("percentOfCanceled", percentOfCanceled);
 
         return "SRM/orders/past_orders/analytics";
     }

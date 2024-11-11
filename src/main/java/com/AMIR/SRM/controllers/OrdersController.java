@@ -22,7 +22,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("srm/orders/")
+@RequestMapping("srm/orders")
 public class OrdersController {
     @Autowired
     private ResponseRepo responseRepo;
@@ -332,12 +332,10 @@ public class OrdersController {
             percentOfCanceled = 0;
         }
 
-        if (percentOfCanceled != 0) {
-            model.addAttribute("sum", df.format(sum));
-            model.addAttribute("count", count);
-            model.addAttribute("avgPrice", avgPrice);
-            model.addAttribute("percentOfCanceled", percentOfCanceled);
-        }
+        model.addAttribute("sum", df.format(sum));
+        model.addAttribute("count", count);
+        model.addAttribute("avgPrice", avgPrice);
+        model.addAttribute("percentOfCanceled", percentOfCanceled);
 
         return "SRM/orders/past_orders/analytics";
     }

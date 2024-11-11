@@ -162,7 +162,6 @@ public class UserController {
 
         List<PastOrder> pastOrder = pastOrderService.getAllPastOrdersWithProviderNameByAuthor(authentication.getName());
         int countOfPastOrders = pastOrder.size();
-
         for (int i = 0; i < pastOrder.size(); i++) {
             if (Objects.equals(pastOrder.get(i).getStatus(), "canceled")) {
                 pastOrder.remove(i);
@@ -189,12 +188,10 @@ public class UserController {
             percentOfCanceled = 0;
         }
 
-        if (percentOfCanceled != 0) {
-            model.addAttribute("sum", df.format(sum));
-            model.addAttribute("count", count);
-            model.addAttribute("avgPrice", avgPrice);
-            model.addAttribute("percentOfCanceled", percentOfCanceled);
-        }
+        model.addAttribute("sum", df.format(sum));
+        model.addAttribute("count", count);
+        model.addAttribute("avgPrice", avgPrice);
+        model.addAttribute("percentOfCanceled", percentOfCanceled);
 
         return "SRM/orders/past_orders/analytics";
     }
