@@ -1,13 +1,10 @@
 package com.AMIR.SRM.domain;
 
-import com.AMIR.SRM.service.ProviderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Calendar;
 
 @Entity
 @Table(name="orders")

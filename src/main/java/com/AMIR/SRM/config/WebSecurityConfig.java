@@ -25,8 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .antMatchers("/", "/pricelist", "/manual", "/about", "/login", "/registration", "/activate/*", "/js/*", "/files/ads_vig.png","/css/*", "/blocks").permitAll()
-                        .anyRequest().authenticated()
+                        .antMatchers("/", "/pricelist", "/manual", "/about", "/login", "/registration", "/activate/*", "/js/*", "/files/ads_vig.png","/css/*", "/blocks").permitAll()                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
