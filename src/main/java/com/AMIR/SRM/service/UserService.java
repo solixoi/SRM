@@ -19,8 +19,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private MailSender mailSender;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,15 +50,6 @@ public class UserService implements UserDetailsService {
 
         userRepo.save(user);
 
-//        if (!StringUtils.isEmpty(user.getEmail())) {
-//            String message = String.format(
-//                    "Здравствуйте, %s! \n" +
-//                            "Добро пожаловать в AMIR. Пожалуйста, перейдите по ссылке для подтверждения: http://localhost:8080/activate/%s",
-//                    user.getUsername(),
-//                    user.getActivationCode()
-//            );
-//            mailSender.send(user.getEmail(), "Код активации", message);
-//        }
         return true;
     }
 
